@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+   
+    <ion-title><div *ngIf="(resultData?.apppages==null)">
+            <p>{{resultData?.slughome?.title}}</p>
+        </div>
+        <div *ngIf="(resultData?.apppages)">
+          <p>{{resultData?.apppages?.title}}</p>
+        </div> </ion-title>
+         <ion-buttons class="refresh" end><button ion-button color="secondary"  (click)="refreshPage()" end>refresh</button></ion-buttons> 
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+ <p>hello this is hone page</p>
+ <!-- div  *ngIf="(resultData?.apppages==null); else elsetag"> -->
+     <!-- <p><span [innerHTML]=" slughome?.content"></span></p> -->
+
+  <div  *ngIf="(resultData?.apppages==null); else elsetag">
+     <p><span [innerHTML]=" resultData?.slughome?.content"></span></p>
+   </div>
+   
+     <!--except index page-->
+   <ng-template #elsetag>
+     <p> <span [innerHTML]="resultData?.apppages?.content"></span></p>
+     <i class="{{resultData?.apppages?.icon}}"  aria-hidden="true"></i>
+     <ion-icon ios="ios-alarm" md="md-alarm"></ion-icon>
+   </ng-template>
+  </ion-content>
+
+  <ion-footer>
+  <ion-toolbar>
+    <ion-title> <p [innerHTML]=" resultData?.metadata?.app_footer_content"></p> </ion-title>
+  </ion-toolbar>
+</ion-footer>
+
