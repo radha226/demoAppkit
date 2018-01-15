@@ -30,7 +30,7 @@
       // this.dbprovider.connection().then((connection)=>{
       //    this.Db=connection;
       // });
-      this.createUser();
+     
       
    }  
    createUser() {
@@ -56,8 +56,8 @@
           let i;
           console.log('event select');
           this.dbprovider.SelectMeta('Meta').then((result)=>{
-            this.metadata=result;
-            //console.log(this.metadata);
+           this.metadata=result;
+           console.log(this.metadata);
             this.dbprovider.SelectPages('app_pages').then((resultpages:any)=>{
                console.log(resultpages);
                this.Pagesid=this.navParams.get('id');
@@ -78,13 +78,11 @@
                  collection['slughome']=this.slughome;
                  collection['apppages']=this.apppages; 
                  collection['AppkitPage']=this.AppkitPage; 
+                 collection['metadata']=this.metadata;
                 
                 resolve(collection);
                 resolve(this.slughome);
-                //  resolve(this.slughome);
-                //  resolve(this.metadata);
-                //  resolve(this.AppkitPage);
-            });
+           });
          });
          
       })
@@ -99,8 +97,7 @@
   //           content:'index page..'
       //    });
       // this.loading.present();
-       this.dbprovider.DeleteAll().then(result=>{
-         
+       this.dbprovider.DeleteAll().then(result=>{       
           this.navCtrl.setRoot(MyApp);
           //this.datacall();
          

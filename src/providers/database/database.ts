@@ -111,40 +111,42 @@ AppkitProducts=[];
 					this.query='CREATE TABLE IF NOT EXISTS '+tableNamepage+'('+columns.join(",")+')';
 					this.ExecuteRun(this.query, []).then((resultpages:any)=>{
 						console.log('app_pages table created now go to insert query');
-						this.insertPages(this.database, this.Apidata,tableNamepage).then((result)=>{
-							console.log(result); resolve('table create resolve');
+						this.insertPages(this.database, this.Apidata,tableNamepage).then((resultffff)=>{
+						    if("app_name" in result){
+					            for(let app_keys in result){
+					                tableName="Meta";
+					                if(typeof result[app_keys]!= "object"){
+					                     columnMeta.push(app_keys + ' TEXT');
+					                }
+					            }
+					            this.query='CREATE TABLE IF NOT EXISTS '+tableName+'('+columnMeta.join(",")+')';
+					            this.ExecuteRun(this.query, []).then((data:any)=>{
+						            this.metaQuery(this.database,result,tableName).then((resultappkit)=>{
+						               	//resolve(resultappkit);
+						                if("app_products" in result){
+						       				tableNamepro="app_products";
+											for(let app_keys in result.app_products[0]){
+											    columnsproduct.push(app_keys+' TEXT');
+											}
+											this.query='CREATE TABLE IF NOT EXISTS '+tableNamepro+'('+columnsproduct.join(",")+')';
+								 			this.ExecuteRun(this.query, []).then((resultproduct:any)=>{
+								 				console.log(resultproduct);
+								   				this.insertProduct(this.database,result,tableNamepro).then((productresul)=>{
+										     		resolve(productresul);
+								    			});
+											});
+			    						}
+						            }) 
+					          	});
+					        }
 						});
 					});
 				}
-			       	// if("app_products" in result){
-			        //   //console.log('product');
-			        //   tableNamepro="app_products";
-			        //   for(let app_keys in result.app_products[0]){
-			        //         columnsproduct.push(app_keys+' TEXT');
-			        //      }
-			        //      this.query='CREATE TABLE IF NOT EXISTS '+tableNamepro+'('+columnsproduct.join(",")+')';
-			        //      this.ExecuteRun(this.query, []).then((resultproduct:any)=>{
-			        //         //console.log(resultproduct);
-			        //      this.insertProduct(this.database,result,tableNamepro).then(()=>{
+			    
+			      
 
-			        //      })
-			        //   });
-			        //   }
-			        //   if("app_name" in result){
-			        //      //console.log('meta');
-			        //      for(let app_keys in result){
-			        //         tableName="Meta";
-			        //          if(typeof result[app_keys]!= "object"){
-			        //              columnMeta.push(app_keys + ' TEXT');
-			        //          }
-			        //      }
-			        //      this.query='CREATE TABLE IF NOT EXISTS '+tableName+'('+columnMeta.join(",")+')';
-			        //      this.ExecuteRun(this.query, []).then((data:any)=>{
-			        //      this.metaQuery(this.database,result,tableName).then((resultappkit)=>{
-			        //         //console.log(resultappkit)
-			        //      }) 
-			        //   });
-			        //   }
+			     
+							
 			        
 			    
 			    
@@ -182,17 +184,55 @@ AppkitProducts=[];
                   this.query='Delete  from '+tableName;
                      this.ExecuteRun(this.query,[]).then((result:any)=>{   
                         //console.log('deelteing app apges');
-                        this.insertData(values,db,tableName, columns).then((ll)=>{
-                        //console.log(ll);
+                        this.insertDataProduct(values,db,tableName, columns).then((ll)=>{
+                       console.log('delete andy then insert');
+                        	console.log(ll);
+                        	resolve('update query');
                         });
                      });
                }else{
-                  this.insertData(values,db,tableName, columns);
+               	console.log('insert product');
+
+                   this.insertDataProduct(values,db,tableName, columns).then((resultproduct)=>{
+                   		console.log('insert here');
+                   		resolve(resultproduct);
+                   });
                }
             })
            }
        });
    }
+    insertDataProduct(values,db, tableName, columns){
+		return new Promise((resolve,reject)=>{
+			let i;
+			let j;
+			let resultKey;
+			if(values != undefined){
+				let collectedData = [];
+				for(i=0; i < values.length; i++){
+					let valuesArray = [];
+					for(j=0; j<values[i].length; j++){
+						if(typeof values[i][j]!= "object"){
+							valuesArray.push("'"+values[i][j]+"'");
+					}else{
+							console.log('object');
+						}
+					}
+					console.log(valuesArray);
+					collectedData.push('('+valuesArray.join(',')+')'
+					);
+					console.log(collectedData);
+				}
+                
+				this.query = 'INSERT INTO '+tableName+' ( '+columns.join(',')+' ) VALUES '+collectedData.join(',') ;
+				console.log(this.query);	
+				this.ExecuteRun(this.query, []).then((result:any)=>{
+					resolve(result);
+				})
+			}
+			
+		});
+	}
 
    metaQuery(db,record,tableName){
       let columnMeta=[];
@@ -228,8 +268,8 @@ AppkitProducts=[];
                           for(let i=0; i < result.rows.length; i++){
                                  AppkitMeta=result.rows[i];
                           }
-                          
-                           resolve(AppkitMeta);
+                          console.log(AppkitMeta);
+                          resolve(AppkitMeta);
                       }
                        });
                }else{
@@ -241,20 +281,20 @@ AppkitProducts=[];
                        this.query='INSERT INTO '+tableName + '(' + columnMeta+ ') VALUES (' +questionMarks + ')';
                        this.ExecuteRun(this.query, values).then((hh)=>{
                         //console.log(hh);
-                        let AppkitMeta;
-                        console.log(hh);
-                         if(result.rows.length>0){
-                          for(let i=0; i < result.rows.length; i++){
-                                 AppkitMeta=result.rows.item(i);
-                          }
-                             
-                          resolve(AppkitMeta);
-                      }
-                       });
+                        //let AppkitMeta;
+                        //console.log(hh);
+                         // if(result.rows.length>0){
+                         //  for(let i=0; i < result.rows.length; i++){
+                         //         AppkitMeta=result.rows.item(i);
+                         //  }
+                          // console.log(AppkitMeta); 
+                          resolve(hh);
+                     // }
+                    });
                }
-            })
+            });
          }
-       })
+       });
    }
    insertPages(db,record,tableName){
       let columns = [];
@@ -301,43 +341,60 @@ AppkitProducts=[];
                         //    //console.log(update);
                         // });
                         this.query='Delete  from '+tableName;
-                        //console.log('Delete  from '+tableName)
-                     this.ExecuteRun(this.query,[]).then((result:any)=>{   
-                        //console.log('deelteing app apges');
-                        this.insertData(values,db,tableName, columns).then((ll)=>{
+                    	 this.ExecuteRun(this.query,[]).then((result:any)=>{   
+                       	 this.insertData2(values,db,tableName, columns).then((ll)=>{
+                        	console.log('delete andy then insert');
+                        	console.log(ll);
+                        	resolve('update query');
                         //console.log(ll);
                         });
                      });
                      }
                }else{
                	console.log('insert');
-                  this.insertData(values,db,tableName, columns).then((ll)=>{
+                   this.insertData2(values,db,tableName, columns).then((ll)=>{
                      console.log(ll);
+                     resolve('insert query');
+                  	
                   });
                }
+
             });
          }
-
+         // resolve('insert query');
       })
    }
-
-   insertData(values,db, tableName, columns, i = 0){
+      insertData2(values,db, tableName, columns){
 		return new Promise((resolve,reject)=>{
-		//console.log('insert');
-			if(values[i] != undefined){
-				let questionMarks = [];
-				for(let j = 0; j< values[i].length; j++){
-					questionMarks.push('?');
+			let i;
+			let j;
+			let resultKey;
+			if(values != undefined){
+				let collectedData = [];
+				for(i=0; i < values.length; i++){
+					let valuesArray = [];
+					for(j=0; j<values[i].length; j++){
+						valuesArray.push(
+								'"'+values[i][j]+'"'
+							);
+					}
+					collectedData.push(
+							'('+valuesArray.join(',')+')'
+					);
 				}
-				this.query = 'INSERT INTO '+tableName+' ( '+columns.join(',')+' ) VALUES ('+questionMarks.join(',')+')';
-				this.ExecuteRun(this.query, values[i]).then((result:any)=>{
-					console.log(result.insertId)
-					this.insertData(values,db,tableName,columns,i = i+1);
-				});
+                
+				this.query = 'INSERT INTO '+tableName+' ( '+columns.join(',')+' ) VALUES '+collectedData.join(',') ;
+				//console.log(this.query);	
+				this.ExecuteRun(this.query, []).then((result:any)=>{
+					resolve(result);
+				})
 			}
+			
 		});
 
    }
+
+  
    update(values,db, tableName, columns, i = 0){
       //console.log('update');
       return new Promise((resolve,reject)=>{

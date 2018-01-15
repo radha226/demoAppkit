@@ -44,6 +44,7 @@ export class MyApp {
       //this.selectData().then(result=>{ 
       //   this.resultData=result;
          this.rootPage = HomePage;
+         this.loading.dismiss();
          this.events.subscribe('user:created', (user) => {
             this.homepage=user;
             console.log( this.homepage);
@@ -79,6 +80,10 @@ export class MyApp {
  
 ngOnInit(){
   //console.log('app component');
+   this.loading=this.loadingctrl.create({
+            content:'wait..'
+   });
+   this.loading.present();
   this.dbprovider.connection().then((connection)=>{
      console.log(connection);
     this.dbprovider.createTable().then((ddd)=>{

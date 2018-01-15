@@ -14,7 +14,7 @@
         {{p}}
       </button> -->
        <ion-item *ngFor="let show of homepage" menuClose (click)="detailsPage(show.id);">
-          {{show.title}}{{show.id}}
+          {{show.title}}
         </ion-item>
         <ion-item (click)="products()" menuClose>Products</ion-item>
     </ion-list>

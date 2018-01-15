@@ -40,18 +40,18 @@ export class ListproductPage {
 	}
 	refreshPage(){
 		 //window.location.reload();
-		 // this.dbprovider.delall().then((result)=>{
+       // this.dbprovider.delall().then((result)=>{
 
-		 // });
-	 // 	this.loading=this.loadingctrl.create({
-  //   			content:'index page..'
-		//   	});
-		// this.loading.present();
-	 //    this.dbprovider.DeleteAll().then(result=>{
-	    	this.dbprovider.delall();
-	    this.navCtrl.setRoot(MyApp);
-	    	
-		// });
+       // });
+    //   this.loading=this.loadingctrl.create({
+  //           content:'index page..'
+      //    });
+      // this.loading.present();
+       this.dbprovider.DeleteAll().then(result=>{       
+          this.navCtrl.setRoot(MyApp);
+          //this.datacall();
+         
+       });
 	}
 	
 	selectData(){
