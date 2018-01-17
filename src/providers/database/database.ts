@@ -322,9 +322,14 @@ AppkitProducts=[];
                                 json=appData[keys];                             
                                 
                               }else{
-                                  json=appData[keys].replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+                                  //json=appData[keys].replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+                                  json=appData[keys].replace(/&/g, "&amp;")
+                                  .replace(/</g, "&lt;")
+                                  .replace(/>/g, "&gt;")
+                                  .replace(/"/g, "&quot;")
+                                  .replace(/'/g, "&#039;");
                               }
-                        
+                              console.log(appData[keys]);
                                 if(record.app_pages != undefined || appData != undefined){
                                     v.push(json);
                                 }
@@ -439,8 +444,12 @@ AppkitProducts=[];
             //console.log(tableName);
             this.query='Select * from '+tableName;
             this.ExecuteRun(this.query,[]).then((resultpages:any)=>{
-               // resultpages.rows.replace(' \\dd\\ ', /\"/g);
-               console.log(resultpages.rows);
+             
+               // for(let keypages in resultpages.rows[0]){
+               //   console.log(keypages);
+               //   console.log(resultpages.rows[0][keypages]);
+               // }
+              // console.log(resultpages.rows[0]);
                resolve(resultpages);
             })
           
