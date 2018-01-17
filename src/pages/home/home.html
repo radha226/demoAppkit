@@ -5,10 +5,10 @@
     </button>
    
     <ion-title><div *ngIf="(resultData?.apppages==null)">
-            <p>{{resultData?.slughome?.title}}</p>
+            <p><span [innerHTML]="resultData?.slughome?.title"></span></p>
         </div>
         <div *ngIf="(resultData?.apppages)">
-          <p>{{resultData?.apppages?.title}}</p>
+          <p><span [innerHTML]="resultData?.apppages?.title"></span></p>
         </div> </ion-title>
          <ion-buttons class="refresh" end><button ion-button color="secondary"  (click)="refreshPage()" end>refresh</button></ion-buttons> 
   </ion-navbar>
@@ -20,7 +20,8 @@
      <!-- <p><span [innerHTML]=" slughome?.content"></span></p> -->
 
   <div  *ngIf="(resultData?.apppages==null); else elsetag">
-     <p><span [innerHTML]=" resultData?.slughome?.content"></span></p>
+     <p><span [innerHTML]=" content"></span></p>
+     
    </div>
    
      <!--except index page-->

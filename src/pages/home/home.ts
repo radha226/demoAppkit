@@ -23,6 +23,7 @@
       database;
       Pagesid:any;
       apppages:any;
+      content:any;
 
 
    constructor(public events: Events,public sqlite: SQLite,public platform:Platform,public navParams: NavParams,public navCtrl: NavController, public loadingctrl:LoadingController , private modalctrl:ModalController, public dbprovider:DatabaseProvider) {
@@ -43,9 +44,13 @@
          this.resultData=result;
          if(this.resultData.apppages!=undefined){
          }
-         console.log(this.resultData.AppkitPage);
+         console.log(this.resultData.apppages);
          this.events.publish('user:created', this.resultData.AppkitPage);
-         console.log(this.resultData.slughome);
+        
+         this.content=this.resultData.slughome.content.replace(/<img src=&quot;/g, '<img src="').replace(/.jpg&quot;/g, '.jpg"');
+        
+         console.log(this.content);
+         //this.inject=this.resultData.slughome;
          
 
       },);

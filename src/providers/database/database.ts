@@ -112,6 +112,7 @@ AppkitProducts=[];
 					this.ExecuteRun(this.query, []).then((resultpages:any)=>{
 						console.log('app_pages table created now go to insert query');
 						this.insertPages(this.database, this.Apidata,tableNamepage).then((resultffff)=>{
+              console.log(resultffff);
 						    if("app_name" in result){
 					            for(let app_keys in result){
 					                tableName="Meta";
@@ -215,17 +216,17 @@ AppkitProducts=[];
 						if(typeof values[i][j]!= "object"){
 							valuesArray.push("'"+values[i][j]+"'");
 					}else{
-							console.log('object');
+							//console.log('object');
 						}
 					}
 					console.log(valuesArray);
 					collectedData.push('('+valuesArray.join(',')+')'
 					);
-					console.log(collectedData);
+					//console.log(collectedData);
 				}
                 
 				this.query = 'INSERT INTO '+tableName+' ( '+columns.join(',')+' ) VALUES '+collectedData.join(',') ;
-				console.log(this.query);	
+				//console.log(this.query);	
 				this.ExecuteRun(this.query, []).then((result:any)=>{
 					resolve(result);
 				})
@@ -315,13 +316,23 @@ AppkitProducts=[];
                             let v = [];
                              let w=[];
                             for(let keys in appData){
+                              let json;
+
+                              if(keys=='id' || keys =='show_in_menu'){
+                                json=appData[keys];                             
+                                
+                              }else{
+                                  json=appData[keys].replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+                              }
+                        
                                 if(record.app_pages != undefined || appData != undefined){
-                                    v.push(appData[keys]);
+                                    v.push(json);
                                 }
                             }
                         values.push(v);
                             }
-                        //console.log(values);
+                        console.log(values);
+
                     }
                 }      
          }
@@ -370,13 +381,18 @@ AppkitProducts=[];
 			let j;
 			let resultKey;
 			if(values != undefined){
+       
+        let hh='This is just a "test string"'+' djfhjdkf';
+      hh = hh.replace(/(["'])/g, "\\$1"); // used to replace double quotes;
+        console.log(hh);
 				let collectedData = [];
 				for(i=0; i < values.length; i++){
 					let valuesArray = [];
 					for(j=0; j<values[i].length; j++){
-						valuesArray.push(
-								'"'+values[i][j]+'"'
-							);
+
+            
+            valuesArray.push('"'+values[i][j]+'"');
+
 					}
 					collectedData.push(
 							'('+valuesArray.join(',')+')'
@@ -384,7 +400,7 @@ AppkitProducts=[];
 				}
                 
 				this.query = 'INSERT INTO '+tableName+' ( '+columns.join(',')+' ) VALUES '+collectedData.join(',') ;
-				//console.log(this.query);	
+			  console.log(this.query);	
 				this.ExecuteRun(this.query, []).then((result:any)=>{
 					resolve(result);
 				})
@@ -423,6 +439,7 @@ AppkitProducts=[];
             //console.log(tableName);
             this.query='Select * from '+tableName;
             this.ExecuteRun(this.query,[]).then((resultpages:any)=>{
+               // resultpages.rows.replace(' \\dd\\ ', /\"/g);
                console.log(resultpages.rows);
                resolve(resultpages);
             })
@@ -519,6 +536,7 @@ ProductDetail(tableName,id){
       return new Promise ((resolve,reject)=>{
          this.http.get('http://aione.oxosolutions.com/api/android/').subscribe(data=>{
             this.Apidata=data.json().data;
+
             //console.log(this.Apidata);
             resolve(this.Apidata);
             
